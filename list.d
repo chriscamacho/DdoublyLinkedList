@@ -59,15 +59,23 @@ class dList (T)
         // the nodes at the start and end of the list
         dNode head;
         dNode tail;
+        int count;
     }
 
 
 
 
     public
+    
+    this()
+    {
+        count = 0;
+        head = null;
+        tail = null;
+    }
 
     /** the uses a quick sort algorithm the cmp (compare) function
-     * pointer should subtract the "value" of one node and another 
+     * pointer should calculate the "value" of one node and another 
      * usually by subtracting 
      *
      * Params:
@@ -106,6 +114,7 @@ class dList (T)
         if (this.head is null) this.head = n;
         this.tail = n;
         n.data = data;
+        count++;
         return n;
     }
 
@@ -125,6 +134,7 @@ class dList (T)
         node.prev = n;
         if (this.head == node) this.head = n;
         n.data = data;
+        count++;
         return n;
     }
 
@@ -159,6 +169,7 @@ class dList (T)
         if (this.head == node) this.head = node.next;
         if (this.tail == node) this.tail = node.prev;
         node = null;
+        count--;
     }
 
     /** delete a node from the list that contains specific data 
@@ -217,6 +228,7 @@ class dList (T)
     /** returns how many nodes there are in the list */
     int totalItems()
     {
+        /*
         int c = 0;
         dNode node = this.head;
         while (node !is null)
@@ -225,6 +237,8 @@ class dList (T)
             node = node.next;
         }
         return c;
+        */
+        return count;
     }
 
     /** returns true if there are no nodes in a list */
@@ -251,7 +265,7 @@ class dList (T)
     }
 
 
-    // used by sort
+    // used by sort (partition)
     private void swap( dNode a, dNode b)
     {
         T* t = a.data;
