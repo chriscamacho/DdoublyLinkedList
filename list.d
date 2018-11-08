@@ -42,11 +42,14 @@ class dList(T)
         {
             dNode _prev;
             dNode _next;
+            T* _data;
         }
 
-        /** the data pointer is public to allow the
-        end user to change it */
-        T* data;
+        T* data()
+        {
+            return _data;
+        }
+        
 
         /** used to manually iterate forward, stop looping if null */
         ref dNode next()
@@ -74,9 +77,6 @@ class dList(T)
         // running count of number of nodes in the list
         int count;
     }
-
-
-
 
     public
     
@@ -128,7 +128,7 @@ class dList(T)
         if (n.prev !is null) n._prev._next = n;
         if (this.head is null) this.head = n;
         this.tail = n;
-        n.data = data;
+        n._data = data;
         count++;
         return n;
     }
@@ -162,7 +162,7 @@ class dList(T)
         if (node._prev !is null) node._prev._next = n;
         node._prev = n;
         if (this.head == node) this.head = n;
-        n.data = data;
+        n._data = data;
         count++;
         return n;
     }
@@ -293,9 +293,9 @@ class dList(T)
     // used by sort (partition)
     private void swap( ref dNode a, ref dNode b)
     {
-        T* t = a.data;
-        a.data = b.data;
-        b.data = t;
+        T* t = a._data;
+        a._data = b._data;
+        b._data = t;
     }
 
     // used by sort
