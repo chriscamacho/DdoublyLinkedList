@@ -1,5 +1,7 @@
 module list;
 
+import std.range;
+
 /**
  * Authors: Chris - contact form bedroomcoders.co.uk
  */
@@ -14,18 +16,23 @@ module list;
  * The class is a template meaning that all nodes contain
  * the same type of data pointers
  * 
- * The list can be iterated forward and backwards.  
+ * The list can be iterated forward and backwards, with foreach
+ * and foreach_reverse.
+ *     
  * It can be sorted using a quick sort algorith, 
  * the sort must be given a callback function so it can compare the
- * "value" of your data type.  
+ * "value" of your data type.
+ *   
  * Nodes can be added, inserted and deleted.
+ * 
  * Searching for a node containing a particular pointer is
  * by brute force.
- * Callbacks can optionally be used for iterating
+ *
+ *
  * 
  */
 
-class dList (T)
+class dList(T)
 {
     /** a node points to its next and previous nodes
     and contains data of a templated type */
@@ -33,8 +40,8 @@ class dList (T)
     {
         private
         {
-            dNode prev;
-            dNode next;
+            dNode _prev;
+            dNode _next;
         }
 
         /** the data pointer is public to allow the
@@ -42,15 +49,15 @@ class dList (T)
         T* data;
 
         /** used to manually iterate forward, stop looping if null */
-        dNode getNext()
+        dNode next()
         {
-            return this.next;
+            return this._next;
         }
 
         /** used to manually iterate backwards, stop looping if null */
-        dNode getPrev()
+        dNode prev()
         {
-            return this.prev;
+            return this._prev;
         }
     }
 
@@ -59,6 +66,7 @@ class dList (T)
         // the nodes at the start and end of the list
         dNode head;
         dNode tail;
+        // running count of number of nodes in the list
         int count;
     }
 
@@ -81,22 +89,23 @@ class dList (T)
      * Params:
      * cmp = the compare callback function
      */
-    void sort(int function(dNode n1, dNode n2) cmp) 
+    void sort(int function(dNode, dNode) cmp) 
     {
         doQsort(this.head, this.tail, cmp);
     }
     
     /** returns the first node in the list */
-    dNode getHead()
+    dNode front()
     {
         return this.head;
     }
 
     /** returns the last node in the list */
-    dNode getTail()
+    dNode back()
     {
         return this.tail;
     }
+
 
     /** adds a new node to end of the list 
      * 
@@ -108,30 +117,44 @@ class dList (T)
     {
         dNode n = new dNode();
 
-        n.prev = this.tail;
-        n.next = null;
-        if (n.prev !is null) n.prev.next = n;
+        n._prev = this.tail;
+        n._next = null;
+        if (n.prev !is null) n._prev._next = n;
         if (this.head is null) this.head = n;
         this.tail = n;
         n.data = data;
         count++;
         return n;
     }
+    
+     /** allows you to add a new node by "assigning" with
+     * ---
+     * anode = alist ~= &someData;
+     * ---
+     * or
+     * ---
+     * alist ~= &someData;
+     * ---
+     */    
+    dNode opOpAssign(string op)(T* data) if(op == "~") {
+        return addNode(data);
+    }
 
     /** creates a new node and inserts it into the list
+     * at the specified node.
      * 
      * Params:
      * 
      * node = the insertion point
-     * data = pointer to tempated data
+     * data = pointer to templated data
      */
     dNode insertNewNode(dNode node, T* data)
     {
         dNode n = new dNode();
-        n.next = node;
-        n.prev = node.prev;
-        if (node.prev !is null) node.prev.next = n;
-        node.prev = n;
+        n._next = node;
+        n._prev = node._prev;
+        if (node._prev !is null) node._prev._next = n;
+        node._prev = n;
         if (this.head == node) this.head = n;
         n.data = data;
         count++;
@@ -150,7 +173,7 @@ class dList (T)
         while (node !is null)
         {
             if (node.data == data) return node;
-            node = node.next;
+            node = node._next;
         }
         node = null;
         return node;
@@ -164,10 +187,10 @@ class dList (T)
      */
     void deleteNode(dNode node)
     {
-        if (node.prev !is null) node.prev.next = node.next;
-        if (node.next !is null) node.next.prev = node.prev;
-        if (this.head == node) this.head = node.next;
-        if (this.tail == node) this.tail = node.prev;
+        if (node._prev !is null) node._prev._next = node._next;
+        if (node._next !is null) node._next._prev = node._prev;
+        if (this.head == node) this.head = node._next;
+        if (this.tail == node) this.tail = node._prev;
         node = null;
         count--;
     }
@@ -197,52 +220,48 @@ class dList (T)
         }
     }
 
-    /** calls a callback function for every node in the list 
-     * 
-     * Params:
-     * 
-     * nodeFunction = the function that is called for each node
-     */
-    void iterateForward( void function(dNode node) nodeFunction )
-    {
-        dNode node = this.head;
-        while (node !is null)
-        {
-            nodeFunction(node);
-            node = node.next;
-        }
-    }
-
-    /** call a callback for each node while iterating backwards */
-    void iterateBackward( void function(dNode node) nodeFunction )
-    {
-        dNode node = this.tail;
-        while (node !is null)
-        {
-            nodeFunction(node);
-            node = node.prev;
-        }
-    }
-
-
     /** returns how many nodes there are in the list */
-    int totalItems()
+    int length()
     {
-        /*
-        int c = 0;
-        dNode node = this.head;
-        while (node !is null)
-        {
-            c++;
-            node = node.next;
-        }
-        return c;
-        */
         return count;
     }
+    
+    /** used by foreach to iterrate the list - 
+     * thanks to weltensturm on reddit for example
+     * and explanations
+     */
+    int opApply(int delegate(dNode) dg)
+    {   
+        dNode node = this.head;
+        int result;
+        while (node !is null)
+        {
+            result = dg(node);
+            if(result) break;
+            node = node._next;
+        }
+        return result;
+    }
+    
+    /** used by foreach_reverse to iterate
+     * backwards through a list
+     */
+    int opApplyReverse(int delegate(dNode) dg)
+    {
+        dNode node = this.tail;
+        int result;
+        while (node !is null)
+        {
+            result = dg(node);
+            if (result) break;
+            node = node._prev;
+        }
+        return result;
+    }
+
 
     /** returns true if there are no nodes in a list */
-    bool isEmpty()
+    bool empty()
     {
         return !this.head;
     }
@@ -250,10 +269,9 @@ class dList (T)
     /** builds an array from all of the nodes in the list */
     T*[] toArray()
     {
-        int n = this.totalItems();
         T*[] ar;
-        ar.length = n;
-        n=0;
+        ar.length = this.count;
+        int n = 0;
         dNode node = this.head;
         while (node !is null)
         {

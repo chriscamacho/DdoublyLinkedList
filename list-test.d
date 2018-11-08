@@ -2,6 +2,7 @@ module main;
 
 import std.stdio;
 import std.string;
+import std.range;
 import list;
 
 // example data to demo sorting
@@ -10,23 +11,32 @@ struct bundle
     string str;
     int val;
 };
-
+/*
 // example iterate callback
 void printNode(dList!string.dNode node)
 {
     writeln("> ",*node.data);
 }
-
+*/
 // prints a list by iterating forward and backwards
 // using the print node callback
 void dumplist(string msg, dList!string l)
 {
     writeln("---- ",msg);
-    writeln("iterate forward - ");
-    l.iterateForward(&printNode);
-    writeln("iterate backward - ");
-    l.iterateBackward(&printNode);
-    writeln("");
+    write("iterate forward - ");
+    //l.iterateForward(&printNode);
+    foreach(dList!string.dNode n; l)
+    {
+        write(*n.data,"  ");
+    }
+    writeln();
+    write("iterate backward - ");
+    //l.iterateBackward(&printNode);
+    foreach_reverse(dList!string.dNode n; l)
+    {
+        write(*n.data,"  ");
+    }
+    writeln();
 }
 
 // the node compare (sorting) callback for bundle
@@ -53,11 +63,11 @@ void main()
     dList!string.dNode n1, n2, n3, i1, i2;
 
     // often you might not need to keep list nodes
-    n1 = l.addNode(&s1);
+    n1 = l ~= &s1;
     dumplist("added one node", l);
 
-    n2 = l.addNode(&s2);
-    n3 = l.addNode(&s3);
+    n2 = l ~= &s2;
+    n3 = l ~= &s3;
     dumplist("added another two nodes", l);
 
     i1 = l.insertNewNode(n2, &si1);
@@ -79,9 +89,9 @@ void main()
     l.deleteNode(n2);
     dumplist("delete node 2", l);
 
-    l.addNode(&s3);
-    l.addNode(&s2);
-    l.addNode(&s1);
+    l ~= &s3;
+    l ~= &s2;
+    l ~= &s1;
     dumplist("add 3 nodes in reverse order", l);
 
     // looking for a node containing a specific item
@@ -122,51 +132,66 @@ void main()
     bundle st9 = { "item 1", 1 };
 
     dList!bundle l2 = new dList!bundle();
-    l2.addNode(&st1);
-    l2.addNode(&st2);
-    l2.addNode(&st3);
-    l2.addNode(&st4);
-    l2.addNode(&st5);
-    l2.addNode(&st6);
-    l2.addNode(&st7);
-    l2.addNode(&st8);
-    l2.addNode(&st9);
+    l2 ~= &st1;
+    l2 ~= &st2;
+    l2 ~= &st3;
+    l2 ~= &st4;
+    l2 ~= &st5;
+    l2 ~= &st6;
+    l2 ~= &st7;
+    l2 ~= &st8;
+    l2 ~= &st9;
+    
+    dList!bundle.dNode node = l2.front();
+    writeln("foreach");
+ 
+    foreach (dList!bundle.dNode b; l2) 
+    {
+        write(b.data.str,"  ");
+    }
+    
+    writeln("\nforeach reverse");
+    foreach_reverse (dList!bundle.dNode b; l2) 
+    {
+        write(b.data.str,"  ");
+    }
 
-    dList!bundle.dNode node = l2.getHead();
-
+    
+    writeln("\nitems in list ", l2.length());
+    node = l2.front();
     while (node !is null)
     {
-        writeln(node.data.str);
-        node = node.getNext();
+        write(node.data.str,"  ");
+        node = node.next();
     }
-    write("\nsort..\n\n");
-    //l2.simpleSort( &cmpNodes);
+    writeln("\nsort..");
     l2.sort( &cmpNodes );
 
-    node = l2.getHead();
+    node = l2.front();
     while (node !is null)
     {
-        writeln( node.data.str, " - ", node.data.val);
-        node = node.getNext;
+        write( node.data.str, " - ", node.data.val,"  ");
+        node = node.next;
     }
 
-    writeln("\nitems in list ", l2.totalItems());
+    writeln("\nitems in list ", l2.length());
 
-    writeln("\ncopy to array and iterate");
+    writeln("copy to array and iterate");
     bundle*[] ar = l2.toArray();
     foreach(bundle* a; ar )
     {
-        writeln(a.str);
+        write(a.str,"  ");
     }
+    
 
     writeln("\ndelete st1, st2, st3");
     l2.deleteNodeFromData(&st1);
     l2.deleteNodeFromData(&st2);
     l2.deleteNodeFromData(&st3);
 
-    writeln("items in list ", l2.totalItems());
-    writeln("empty ? ", l2.isEmpty());
-    writeln("\ndelete st4 to st9");
+    writeln("items in list ", l2.length());
+    writeln("empty ? ", l2.empty());
+    writeln("delete st4 to st9");
     l2.deleteNodeFromData(&st4);
     l2.deleteNodeFromData(&st5);
     l2.deleteNodeFromData(&st6);
@@ -174,8 +199,8 @@ void main()
     l2.deleteNodeFromData(&st8);
     l2.deleteNodeFromData(&st9);
 
-    writeln("items in list ",l2.totalItems());
-    writeln("empty ? ",l2.isEmpty(),"\n\n");
+    writeln("items in list ",l2.length());
+    writeln("empty ? ",l2.empty());
 
 }
 

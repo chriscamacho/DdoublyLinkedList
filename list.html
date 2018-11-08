@@ -508,14 +508,17 @@
  The class is a template meaning that all nodes contain
  the same type of data pointers
 <br><br>
- The list can be iterated forward and backwards
- it can be sorted using a quick sort algorith
+ The list can be iterated forward and backwards, with foreach
+ and foreach_reverse.
+<br><br>
+ It can be sorted using a quick sort algorith,
  the sort must be given a callback function so it can compare the
  "value" of your data type.
- nodes can be added, inserted and deleted
- searching for a node containing a particular pointer is
- by brute force
- callbacks can optionally be used for iterating
+<br><br>
+ Nodes can be added, inserted and deleted.
+<br><br>
+ Searching for a node containing a particular pointer is
+ by brute force.
   </p>
 </div>
 
@@ -588,7 +591,7 @@
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#dList.dNode.getNext" id="dList.dNode.getNext"><code class="code">getNext</code></a>
+  <a href="#dList.dNode.next" id="dList.dNode.next"><code class="code">next</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -597,7 +600,7 @@
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="dList.dNode.getNext"></span>dNode <code class="code">getNext</code>();
+            <span class="ddoc_anchor" id="dList.dNode.next"></span>dNode <code class="code">next</code>();
 
           </code>
         </p>
@@ -620,7 +623,7 @@
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#dList.dNode.getPrev" id="dList.dNode.getPrev"><code class="code">getPrev</code></a>
+  <a href="#dList.dNode.prev" id="dList.dNode.prev"><code class="code">prev</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -629,7 +632,7 @@
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="dList.dNode.getPrev"></span>dNode <code class="code">getPrev</code>();
+            <span class="ddoc_anchor" id="dList.dNode.prev"></span>dNode <code class="code">prev</code>();
 
           </code>
         </p>
@@ -666,7 +669,7 @@
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="dList.sort"></span>void <code class="code">sort</code>(int function(dNode n1, dNode n2) <code class="code">cmp</code>);
+            <span class="ddoc_anchor" id="dList.sort"></span>void <code class="code">sort</code>(int function(dNode, dNode) <code class="code">cmp</code>);
 
           </code>
         </p>
@@ -679,7 +682,7 @@
   <div class="ddoc_summary">
   <p class="para">
     the uses a quick <code class="code">sort</code> algorithm the <code class="code">cmp</code> (compare) function
- pointer should subtract the "value" of one node and another
+ pointer should calculate the "value" of one node and another
  usually by subtracting
 
   </p>
@@ -691,7 +694,7 @@
       <tr class="ddoc_param_row">
   <td scope="ddoc_param_id">
   <code class="code">
-    <em class="term">int function(dNode n1, dNode n2) <code class="code">cmp</code></em>
+    <em class="term">int function(dNode, dNode) <code class="code">cmp</code></em>
   </code>
 </td>
 <td>
@@ -714,7 +717,7 @@
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#dList.getHead" id="dList.getHead"><code class="code">getHead</code></a>
+  <a href="#dList.front" id="dList.front"><code class="code">front</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -723,7 +726,7 @@
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="dList.getHead"></span>dNode <code class="code">getHead</code>();
+            <span class="ddoc_anchor" id="dList.front"></span>dNode <code class="code">front</code>();
 
           </code>
         </p>
@@ -746,7 +749,7 @@
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#dList.getTail" id="dList.getTail"><code class="code">getTail</code></a>
+  <a href="#dList.back" id="dList.back"><code class="code">back</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -755,7 +758,7 @@
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="dList.getTail"></span>dNode <code class="code">getTail</code>();
+            <span class="ddoc_anchor" id="dList.back"></span>dNode <code class="code">back</code>();
 
           </code>
         </p>
@@ -833,6 +836,62 @@
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
+  <a href="#dList.opOpAssign" id="dList.opOpAssign"><code class="code">opOpAssign</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="dList.opOpAssign"></span>dNode <code class="code">opOpAssign</code>(string op)(T* <code class="code">data</code>) if (op == "~");
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  <section class="section ddoc_sections">
+  <div class="ddoc_summary">
+  <p class="para">
+     allows you to add a new node by "assigning" with
+
+<section class="code_listing">
+  <div class="code_sample">
+    <div class="dlang">
+      <ol class="code_lines">
+        <li><code class="code">anode = alist ~= &amp;someData;
+</code></li>
+      </ol>
+    </div>
+  </div>
+</section>
+ or
+
+<section class="code_listing">
+  <div class="code_sample">
+    <div class="dlang">
+      <ol class="code_lines">
+        <li><code class="code">alist ~= &amp;someData;
+</code></li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+  </p>
+</div>
+
+</section>
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
   <a href="#dList.insertNewNode" id="dList.insertNewNode"><code class="code">insertNewNode</code></a>
 </div>
 </div><div class="ddoc_decl">
@@ -855,6 +914,7 @@
   <div class="ddoc_summary">
   <p class="para">
     creates a new <code class="code">node</code> and inserts it into the list
+ at the specified <code class="code">node</code>.
 
   </p>
 </div>
@@ -885,7 +945,7 @@
 <td>
   <div class="ddoc_param_desc">
     <p class="para">
-      pointer to tempated <code class="code">data</code>
+      pointer to templated <code class="code">data</code>
     </p>
   </div>
 </td>
@@ -1099,7 +1159,7 @@
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#dList.iterateForward" id="dList.iterateForward"><code class="code">iterateForward</code></a>
+  <a href="#dList.length" id="dList.length"><code class="code">length</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -1108,94 +1168,7 @@
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="dList.iterateForward"></span>void <code class="code">iterateForward</code>(void function(dNode node) <code class="code">nodeFunction</code>);
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    calls a callback function for every node in the list
-
-  </p>
-</div>
-<div class="ddoc_params">
-  <h4>Parameters</h4>
-  <table cellspacing="0" cellpadding="5" border="0" class="graybox">
-    <tbody>
-      <tr class="ddoc_param_row">
-  <td scope="ddoc_param_id">
-  <code class="code">
-    <em class="term">void function(dNode node) <code class="code">nodeFunction</code></em>
-  </code>
-</td>
-<td>
-  <div class="ddoc_param_desc">
-    <p class="para">
-      the function that is called for each node
-    </p>
-  </div>
-</td>
-</tr>
-
-    </tbody>
-  </table>
-</div>
-
-</section>
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#dList.iterateBackward" id="dList.iterateBackward"><code class="code">iterateBackward</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="dList.iterateBackward"></span>void <code class="code">iterateBackward</code>(void function(dNode node) <code class="code">nodeFunction</code>);
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    call a callback for each node while iterating backwards
-  </p>
-</div>
-
-</section>
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#dList.totalItems" id="dList.totalItems"><code class="code">totalItems</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="dList.totalItems"></span>int <code class="code">totalItems</code>();
+            <span class="ddoc_anchor" id="dList.length"></span>int <code class="code">length</code>();
 
           </code>
         </p>
@@ -1218,7 +1191,7 @@
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#dList.isEmpty" id="dList.isEmpty"><code class="code">isEmpty</code></a>
+  <a href="#dList.opApply" id="dList.opApply"><code class="code">opApply</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -1227,7 +1200,74 @@
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="dList.isEmpty"></span>bool <code class="code">isEmpty</code>();
+            <span class="ddoc_anchor" id="dList.opApply"></span>int <code class="code">opApply</code>(int delegate(dNode) <code class="code">dg</code>);
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  <section class="section ddoc_sections">
+  <div class="ddoc_summary">
+  <p class="para">
+    used by foreach to iterrate the list -
+ thanks to weltensturm on reddit for example
+ and explanations
+  </p>
+</div>
+
+</section>
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#dList.opApplyReverse" id="dList.opApplyReverse"><code class="code">opApplyReverse</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="dList.opApplyReverse"></span>int <code class="code">opApplyReverse</code>(int delegate(dNode) <code class="code">dg</code>);
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  <section class="section ddoc_sections">
+  <div class="ddoc_summary">
+  <p class="para">
+    used by foreach_reverse to iterate
+ backwards through a list
+  </p>
+</div>
+
+</section>
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#dList.empty" id="dList.empty"><code class="code">empty</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="dList.empty"></span>bool <code class="code">empty</code>();
 
           </code>
         </p>
