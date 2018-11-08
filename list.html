@@ -600,7 +600,7 @@
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="dList.dNode.next"></span>dNode <code class="code">next</code>();
+            <span class="ddoc_anchor" id="dList.dNode.next"></span>ref dNode <code class="code">next</code>();
 
           </code>
         </p>
@@ -632,7 +632,7 @@
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="dList.dNode.prev"></span>dNode <code class="code">prev</code>();
+            <span class="ddoc_anchor" id="dList.dNode.prev"></span>ref dNode <code class="code">prev</code>();
 
           </code>
         </p>
@@ -669,7 +669,7 @@
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="dList.sort"></span>void <code class="code">sort</code>(int function(dNode, dNode) <code class="code">cmp</code>);
+            <span class="ddoc_anchor" id="dList.sort"></span>void <code class="code">sort</code>(int function(ref dNode, ref dNode) <code class="code">cmp</code>);
 
           </code>
         </p>
@@ -694,7 +694,7 @@
       <tr class="ddoc_param_row">
   <td scope="ddoc_param_id">
   <code class="code">
-    <em class="term">int function(dNode, dNode) <code class="code">cmp</code></em>
+    <em class="term">int function(ref dNode, ref dNode) <code class="code">cmp</code></em>
   </code>
 </td>
 <td>
@@ -726,7 +726,7 @@
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="dList.front"></span>dNode <code class="code">front</code>();
+            <span class="ddoc_anchor" id="dList.front"></span>ref dNode <code class="code">front</code>();
 
           </code>
         </p>
@@ -758,7 +758,7 @@
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="dList.back"></span>dNode <code class="code">back</code>();
+            <span class="ddoc_anchor" id="dList.back"></span>ref dNode <code class="code">back</code>();
 
           </code>
         </p>
@@ -1200,7 +1200,7 @@
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="dList.opApply"></span>int <code class="code">opApply</code>(int delegate(dNode) <code class="code">dg</code>);
+            <span class="ddoc_anchor" id="dList.opApply"></span>int <code class="code">opApply</code>(int delegate(ref dNode) <code class="code">dg</code>);
 
           </code>
         </p>
@@ -1234,7 +1234,7 @@
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="dList.opApplyReverse"></span>int <code class="code">opApplyReverse</code>(int delegate(dNode) <code class="code">dg</code>);
+            <span class="ddoc_anchor" id="dList.opApplyReverse"></span>int <code class="code">opApplyReverse</code>(int delegate(ref dNode) <code class="code">dg</code>);
 
           </code>
         </p>

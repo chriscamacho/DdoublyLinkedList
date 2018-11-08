@@ -11,36 +11,25 @@ struct bundle
     string str;
     int val;
 };
-/*
-// example iterate callback
-void printNode(dList!string.dNode node)
-{
-    writeln("> ",*node.data);
-}
-*/
+
 // prints a list by iterating forward and backwards
-// using the print node callback
 void dumplist(string msg, dList!string l)
 {
     writeln("---- ",msg);
     write("iterate forward - ");
-    //l.iterateForward(&printNode);
-    foreach(dList!string.dNode n; l)
-    {
-        write(*n.data,"  ");
-    }
+    
+    foreach(dList!string.dNode n; l) write(*n.data,"  ");
+
     writeln();
     write("iterate backward - ");
-    //l.iterateBackward(&printNode);
-    foreach_reverse(dList!string.dNode n; l)
-    {
-        write(*n.data,"  ");
-    }
+
+    foreach_reverse(dList!string.dNode n; l) write(*n.data,"  ");
+    
     writeln();
 }
 
-// the node compare (sorting) callback for bundle
-int cmpNodes(dList!bundle.dNode n1, dList!bundle.dNode n2)
+// the node compare (sorting) callback for bundle type
+int cmpNodes(ref dList!bundle.dNode n1, ref dList!bundle.dNode n2)
 {
     bundle* rn1 = n1.data;
     bundle* rn2 = n2.data;
@@ -93,6 +82,7 @@ void main()
     l ~= &s2;
     l ~= &s1;
     dumplist("add 3 nodes in reverse order", l);
+    
 
     // looking for a node containing a specific item
     dList!string.dNode found;
@@ -104,6 +94,7 @@ void main()
     else
     {
         writeln("ERROR didn't find node containing s2 in list");
+        return;
     }
 
     dumplist("find and then delete node pointing to s2", l);
@@ -112,6 +103,7 @@ void main()
     if (found !is null)
     {
         writeln("ERROR found node containing s2 in list after deleting it");
+        return;
     }
     else
     {
@@ -142,22 +134,15 @@ void main()
     l2 ~= &st8;
     l2 ~= &st9;
     
-    dList!bundle.dNode node = l2.front();
     writeln("foreach");
  
-    foreach (dList!bundle.dNode b; l2) 
-    {
-        write(b.data.str,"  ");
-    }
+    foreach (dList!bundle.dNode b; l2) write(b.data.str,"  ");
     
     writeln("\nforeach reverse");
-    foreach_reverse (dList!bundle.dNode b; l2) 
-    {
-        write(b.data.str,"  ");
-    }
-
+    foreach_reverse (dList!bundle.dNode b; l2) write(b.data.str,"  ");
     
     writeln("\nitems in list ", l2.length());
+    dList!bundle.dNode node = l2.front();
     node = l2.front();
     while (node !is null)
     {
@@ -178,11 +163,8 @@ void main()
 
     writeln("copy to array and iterate");
     bundle*[] ar = l2.toArray();
-    foreach(bundle* a; ar )
-    {
-        write(a.str,"  ");
-    }
-    
+    foreach(bundle* a; ar ) write(a.str,"  ");
+ 
 
     writeln("\ndelete st1, st2, st3");
     l2.deleteNodeFromData(&st1);

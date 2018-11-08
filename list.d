@@ -49,15 +49,20 @@ class dList(T)
         T* data;
 
         /** used to manually iterate forward, stop looping if null */
-        dNode next()
+        ref dNode next()
         {
             return this._next;
         }
 
         /** used to manually iterate backwards, stop looping if null */
-        dNode prev()
+        ref dNode prev()
         {
             return this._prev;
+        }
+        
+        this() {
+            _prev = null;
+            _next = null;
         }
     }
 
@@ -89,19 +94,19 @@ class dList(T)
      * Params:
      * cmp = the compare callback function
      */
-    void sort(int function(dNode, dNode) cmp) 
+    void sort(int function(ref dNode, ref dNode) cmp) 
     {
         doQsort(this.head, this.tail, cmp);
     }
     
     /** returns the first node in the list */
-    dNode front()
+    ref dNode front()
     {
         return this.head;
     }
 
     /** returns the last node in the list */
-    dNode back()
+    ref dNode back()
     {
         return this.tail;
     }
@@ -113,10 +118,11 @@ class dList(T)
      *
      * data = a pointer to the templated data 
      */
+     
+     
     dNode addNode(T* data)
     {
         dNode n = new dNode();
-
         n._prev = this.tail;
         n._next = null;
         if (n.prev !is null) n._prev._next = n;
@@ -185,6 +191,7 @@ class dList(T)
      * 
      * node = the node to remove from the list
      */
+     
     void deleteNode(dNode node)
     {
         if (node._prev !is null) node._prev._next = node._next;
@@ -230,7 +237,7 @@ class dList(T)
      * thanks to weltensturm on reddit for example
      * and explanations
      */
-    int opApply(int delegate(dNode) dg)
+    int opApply(int delegate(ref dNode) dg)
     {   
         dNode node = this.head;
         int result;
@@ -246,7 +253,7 @@ class dList(T)
     /** used by foreach_reverse to iterate
      * backwards through a list
      */
-    int opApplyReverse(int delegate(dNode) dg)
+    int opApplyReverse(int delegate(ref dNode) dg)
     {
         dNode node = this.tail;
         int result;
@@ -284,7 +291,7 @@ class dList(T)
 
 
     // used by sort (partition)
-    private void swap( dNode a, dNode b)
+    private void swap( ref dNode a, ref dNode b)
     {
         T* t = a.data;
         a.data = b.data;
@@ -292,7 +299,7 @@ class dList(T)
     }
 
     // used by sort
-    private dNode partition( dNode l, dNode h, int function(dNode n1, dNode n2) cmp)
+    private dNode partition( ref dNode l, ref dNode h, int function(ref dNode n1, ref dNode n2) cmp)
     {
         dNode x = h;
         dNode i = l.prev;
@@ -311,7 +318,7 @@ class dList(T)
     }
     
     // needs to be seperate from sort as it's recursive
-    private void doQsort(dNode l, dNode h, int function(dNode n1, dNode n2) cmp)
+    private void doQsort(ref dNode l, ref dNode h, int function(ref dNode n1, ref dNode n2) cmp)
     {
         if (h !is null && l != h && l != h.next)
         {
